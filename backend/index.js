@@ -96,6 +96,7 @@ app.get('/products', authenticateToken, (req, res) => {
 
 app.post('/generate-invoice', authenticateToken, (req, res) => {
     const { products } = req.body;
+    console.log('Received products for invoice:', products); // Add this line for debugging
     const userId = req.user;
     const date = new Date().toISOString();
     db.run("INSERT INTO invoices (user_id, date, products) VALUES (?, ?, ?)", [userId, date, JSON.stringify(products)], async function (err) {
@@ -111,6 +112,7 @@ app.post('/generate-invoice', authenticateToken, (req, res) => {
 });
 
 async function generatePDF(invoice) {
+    console.log('Generating PDF with invoice data:', invoice); // Add this line for debugging
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const content = `
@@ -130,6 +132,7 @@ async function generatePDF(invoice) {
     await browser.close();
     return pdf;
 }
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

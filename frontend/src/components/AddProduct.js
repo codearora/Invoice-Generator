@@ -41,6 +41,7 @@ const AddProduct = ({ token }) => {
     };
 
     const handleGenerateInvoice = async () => {
+        console.log('Generating invoice with products:', products); // Add this line for debugging
         try {
             const res = await axios.post('http://localhost:5000/generate-invoice', { products }, {
                 headers: { 'x-auth-token': token },
