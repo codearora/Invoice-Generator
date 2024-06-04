@@ -20,7 +20,9 @@ const AddProduct = ({ token }) => {
     };
 
     useEffect(() => {
-        fetchProducts();
+        if (token) {
+            fetchProducts();
+        }
     }, [token]);
 
     const handleSubmit = async (e) => {

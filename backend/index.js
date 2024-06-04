@@ -1,3 +1,4 @@
+// src/server.js (or your main server file)
 const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
@@ -11,7 +12,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors()); // Enable CORS for all routes
+app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to SQLite database
@@ -40,14 +41,10 @@ const authenticateToken = (req, res, next) => {
 app.post('/register', (req, res) => {
     const { name, email, password } = req.body;
 
-    // Log request body for debugging
-    console.log('Request Body:', req.body);
-
     if (!name || !email || !password) {
         return res.status(400).json({ message: 'Please provide name, email, and password' });
     }
 
-    // Check if the email already exists
     db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
         if (err) {
             return res.status(500).json({ message: 'Database error' });
@@ -59,7 +56,7 @@ app.post('/register', (req, res) => {
         const hashedPassword = bcrypt.hashSync(password, 10);
         db.run("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hashedPassword], function (err) {
             if (err) {
-                console.error('Database Error:', err); // Log database error
+                console.error('Database Error:', err);
                 return res.status(400).json({ message: 'Error inserting user' });
             }
             res.json({ id: this.lastID });
@@ -85,6 +82,15 @@ app.post('/add-product', authenticateToken, (req, res) => {
             return res.status(400).json({ message: 'Error adding product' });
         }
         res.json({ id: this.lastID });
+    });
+});
+
+app.get('/products', authenticateToken, (req, res) => {
+    db.all("SELECT * FROM products", [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json(rows);
     });
 });
 
