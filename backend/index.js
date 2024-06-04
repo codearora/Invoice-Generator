@@ -118,7 +118,10 @@ async function generatePDF(invoice) {
     <body>
       <h1>Invoice #${invoice.id}</h1>
       <p>Date: ${invoice.date}</p>
-      <p>Products: ${JSON.stringify(invoice.products)}</p>
+      <h2>Products:</h2>
+      <ul>
+        ${invoice.products.map(product => `<li>${product.name} - ${product.qty} units @ $${product.rate}/unit</li>`).join('')}
+      </ul>
     </body>
     </html>
   `;
