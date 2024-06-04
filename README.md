@@ -217,7 +217,7 @@ Add `console.log` statements at various points in your code to trace data flow a
 
 - **Name:** Jai Arora
 - **LinkedIn:** jaiarora6377@gmail.com
-- **LinkedIn:** [Your LinkedIn Profile](https://www.linkedin.com/in/jaiarora6377/)
+- **LinkedIn:** [Jai Arora](https://www.linkedin.com/in/jaiarora6377/)
 
 
 Feel free to reach out for any questions or collaboration opportunities!
