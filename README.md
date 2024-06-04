@@ -25,7 +25,7 @@ This project is a simple invoice generator application built with React and Node
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/invoice-generator.git
+    git clone https://github.com/codearora/invoice-generator.git
     cd invoice-generator
     ```
 
@@ -109,15 +109,16 @@ invoice-generator/
   - `email` (string)
   - `password` (string)
 - **Response:**
-  - `token` (string)
-  - `user` (object)
+  - `id` (integer)
+  - `name` (string)
+  - `email` (string)
 
 ### Add Product
 
 - **URL:** `/add-product`
 - **Method:** `POST`
 - **Headers:**
-  - `x-auth-token` (string)
+  - `email` (string)
 - **Body Parameters:**
   - `name` (string)
   - `qty` (integer)
@@ -130,7 +131,7 @@ invoice-generator/
 - **URL:** `/products`
 - **Method:** `GET`
 - **Headers:**
-  - `x-auth-token` (string)
+  - `email` (string)
 - **Response:**
   - `products` (array of objects)
 
@@ -139,7 +140,7 @@ invoice-generator/
 - **URL:** `/generate-invoice`
 - **Method:** `POST`
 - **Headers:**
-  - `x-auth-token` (string)
+  - `email` (string)
 - **Body Parameters:**
   - `products` (array of objects)
 - **Response:**
@@ -169,7 +170,7 @@ curl -X POST http://localhost:5000/login -H "Content-Type: application/json" -d 
 ### Add Product
 
 ```bash
-curl -X POST http://localhost:5000/add-product -H "Content-Type: application/json" -H "x-auth-token: YOUR_TOKEN_HERE" -d '{
+curl -X POST http://localhost:5000/add-product -H "Content-Type: application/json" -H "email: YOUR_EMAIL_HERE" -d '{
   "name": "Product 1",
   "qty": 10,
   "rate": 15.5
@@ -179,7 +180,7 @@ curl -X POST http://localhost:5000/add-product -H "Content-Type: application/jso
 ### Generate Invoice
 
 ```bash
-curl -X POST http://localhost:5000/generate-invoice -H "Content-Type: application/json" -H "x-auth-token: YOUR_TOKEN_HERE" -d '{
+curl -X POST http://localhost:5000/generate-invoice -H "Content-Type: application/json" -H "email: YOUR_EMAIL_HERE" -d '{
   "products": [
     {
       "name": "Product 1",
@@ -207,20 +208,17 @@ Add `console.log` statements at various points in your code to trace data flow a
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a pull request
+2. Create your feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Create a new Pull Request
 
-## License
+## Owner
 
-Distributed under the MIT License. See `LICENSE` for more information.
+- **Name:** Jai Arora
+- **LinkedIn:** jaiarora6377@gmail.com
+- **LinkedIn:** [Your LinkedIn Profile](https://www.linkedin.com/in/jaiarora6377/)
 
-## Acknowledgements
 
-- [React](https://reactjs.org/)
-- [Node.js](https://nodejs.org/)
-- [SQLite](https://www.sqlite.org/)
-- [Axios](https://axios-http.com/)
-- [Puppeteer](https://pptr.dev/)
+Feel free to reach out for any questions or collaboration opportunities!
 ```
