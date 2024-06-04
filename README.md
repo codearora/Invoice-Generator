@@ -1,5 +1,5 @@
 
-```markdown
+
 # Invoice Generator
 
 This project is a simple invoice generator application built with React and Node.js. It allows users to register, log in, add products, and generate invoices as PDF files.
@@ -221,4 +221,4 @@ Add `console.log` statements at various points in your code to trace data flow a
 
 
 Feel free to reach out for any questions or collaboration opportunities!
-```
+
