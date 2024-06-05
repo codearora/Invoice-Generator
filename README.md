@@ -64,30 +64,6 @@ This project is a simple invoice generator application built with React and Node
 
 The frontend should now be running on `http://localhost:3000` and the backend on `http://localhost:5000`.
 
-## Project Structure
-
-```
-invoice-generator/
-├── server/
-│   ├── server.js
-│   ├── database.sqlite
-│   ├── package.json
-│   └── ...
-└── client/
-    ├── src/
-    │   ├── components/
-    │   │   ├── AddProduct.js
-    │   │   ├── GenerateInvoice.js
-    │   │   ├── Login.js
-    │   │   ├── Register.js
-    │   │   └── ...
-    │   ├── App.js
-    │   ├── index.js
-    │   └── ...
-    ├── package.json
-    └── ...
-```
-
 ## API Endpoints
 
 ### User Registration
