@@ -44,10 +44,10 @@ This project is a simple invoice generator application built with React and Node
 
 ### Frontend Setup
 
-1. **Navigate to the client directory:**
+1. **Navigate to the frontend directory:**
 
     ```bash
-    cd ../client
+    cd frontend
     ```
 
 2. **Install frontend dependencies:**
@@ -192,7 +192,7 @@ Add `console.log` statements at various points in your code to trace data flow a
 ## Owner
 
 - **Name:** Jai Arora
-- **LinkedIn:** jaiarora6377@gmail.com
+- **Email:** jaiarora6377@gmail.com
 - **LinkedIn:** [Jai Arora](https://www.linkedin.com/in/jaiarora6377/)
 
 
