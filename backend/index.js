@@ -1,11 +1,9 @@
-// src/server.js (or your main server file)
 const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const puppeteer = require('puppeteer');
-const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 
@@ -96,7 +94,7 @@ app.get('/products', authenticateToken, (req, res) => {
 
 app.post('/generate-invoice', authenticateToken, (req, res) => {
     const { products } = req.body;
-    console.log('Received products for invoice:', products); // Add this line for debugging
+    console.log('Received products for invoice:', products); // Debugging
     const userId = req.user;
     const date = new Date().toISOString();
     db.run("INSERT INTO invoices (user_id, date, products) VALUES (?, ?, ?)", [userId, date, JSON.stringify(products)], async function (err) {
@@ -104,7 +102,8 @@ app.post('/generate-invoice', authenticateToken, (req, res) => {
             return res.status(400).json({ message: 'Error generating invoice' });
         }
         const invoiceId = this.lastID;
-        const pdf = await generatePDF({ id: invoiceId, user_id: userId, date, products });
+        const parsedProducts = JSON.parse(products); // Parse products JSON string into an array
+        const pdf = await generatePDF({ id: invoiceId, user_id: userId, date, products: parsedProducts });
         res.setHeader('Content-disposition', 'attachment; filename=invoice.pdf');
         res.setHeader('Content-type', 'application/pdf');
         res.send(pdf);
@@ -112,7 +111,7 @@ app.post('/generate-invoice', authenticateToken, (req, res) => {
 });
 
 async function generatePDF(invoice) {
-    console.log('Generating PDF with invoice data:', invoice); // Add this line for debugging
+    console.log('Generating PDF with invoice data:', invoice); // Debugging
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const content = `
@@ -132,7 +131,6 @@ async function generatePDF(invoice) {
     await browser.close();
     return pdf;
 }
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
