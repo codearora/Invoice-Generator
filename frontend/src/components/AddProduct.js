@@ -13,6 +13,7 @@ const AddProduct = ({ token }) => {
             const res = await axios.get('http://localhost:5000/products', {
                 headers: { 'x-auth-token': token },
             });
+            console.log('Fetched products:', res.data); // Debugging
             setProducts(res.data);
         } catch (err) {
             console.error(err);
@@ -41,10 +42,11 @@ const AddProduct = ({ token }) => {
     };
 
     const handleGenerateInvoice = async () => {
-        console.log('Generating invoice with products:', products); // Add this line for debugging
+        console.log('Generating invoice with products:', products); // Debugging
         try {
             const res = await axios.post('http://localhost:5000/generate-invoice', { products }, {
                 headers: { 'x-auth-token': token },
+                responseType: 'arraybuffer' // Ensure the response is handled correctly
             });
             const blob = new Blob([res.data], { type: 'application/pdf' });
             const link = document.createElement('a');

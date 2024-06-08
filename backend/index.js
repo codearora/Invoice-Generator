@@ -102,8 +102,7 @@ app.post('/generate-invoice', authenticateToken, (req, res) => {
             return res.status(400).json({ message: 'Error generating invoice' });
         }
         const invoiceId = this.lastID;
-        const parsedProducts = JSON.parse(products); // Parse products JSON string into an array
-        const pdf = await generatePDF({ id: invoiceId, user_id: userId, date, products: parsedProducts });
+        const pdf = await generatePDF({ id: invoiceId, user_id: userId, date, products });
         res.setHeader('Content-disposition', 'attachment; filename=invoice.pdf');
         res.setHeader('Content-type', 'application/pdf');
         res.send(pdf);
