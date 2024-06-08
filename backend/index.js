@@ -113,15 +113,51 @@ async function generatePDF(invoice) {
     console.log('Generating PDF with invoice data:', invoice); // Debugging
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
+    // Get current date in IST
+    const dateIST = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+
     const content = `
     <html>
+    <head>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
     <body>
-      <h1>Invoice #${invoice.id}</h1>
-      <p>Date: ${invoice.date}</p>
-      <h2>Products:</h2>
-      <ul>
-        ${invoice.products.map(product => `<li>${product.name} - ${product.qty} units @ $${product.rate}/unit</li>`).join('')}
-      </ul>
+        <h1 style="text-align: center;">Invoice #${invoice.id}</h1>
+        <p style="text-align: right;">Date: ${dateIST}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${invoice.products.map(product => `
+                    <tr>
+                        <td>${product.name}</td>
+                        <td>${product.qty}</td>
+                        <td>${product.rate}</td>
+                        <td>${product.qty * product.rate}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
     </body>
     </html>
   `;
@@ -130,6 +166,7 @@ async function generatePDF(invoice) {
     await browser.close();
     return pdf;
 }
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
