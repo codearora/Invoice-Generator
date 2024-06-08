@@ -117,28 +117,56 @@ async function generatePDF(invoice) {
     // Get current date in IST
     const dateIST = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
 
+    // Calculate subtotal
+    const subtotal = invoice.products.reduce((acc, product) => acc + (product.qty * product.rate), 0);
+
+    // Calculate GST (18%)
+    const gst = subtotal * 0.18;
+
     const content = `
     <html>
     <head>
         <style>
-            table {
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+            }
+            .invoice-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .invoice-table {
                 width: 100%;
                 border-collapse: collapse;
+                margin-bottom: 20px;
             }
-            th, td {
-                border: 1px solid black;
+            .invoice-table th, .invoice-table td {
+                border: 1px solid #dddddd;
                 padding: 8px;
-                text-align: left;
             }
-            th {
+            .invoice-table th {
                 background-color: #f2f2f2;
+            }
+            .invoice-total {
+                text-align: right;
+                font-weight: bold;
+            }
+            .invoice-footer {
+                margin-top: 50px;
+            }
+            .signature {
+                float: right;
             }
         </style>
     </head>
     <body>
-        <h1 style="text-align: center;">Invoice #${invoice.id}</h1>
-        <p style="text-align: right;">Date: ${dateIST}</p>
-        <table>
+        <div class="invoice-header">
+            <h1>Soft Factory</h1>
+            <p>Invoice #${invoice.id}</p>
+            <p>Date: ${dateIST}</p>
+        </div>
+        <table class="invoice-table">
             <thead>
                 <tr>
                     <th>Product Name</th>
@@ -158,6 +186,15 @@ async function generatePDF(invoice) {
                 `).join('')}
             </tbody>
         </table>
+        <div class="invoice-total">
+            <div>Subtotal: $${subtotal}</div>
+            <div>GST (18%): $${gst.toFixed(2)}</div>
+            <div>Total (including GST): $${(subtotal + gst).toFixed(2)}</div>
+        </div>
+        <div class="invoice-footer">
+            <p>Soft Industries</p>
+            <img src="signature.png" alt="Signature" class="signature">
+        </div>
     </body>
     </html>
   `;
@@ -166,6 +203,7 @@ async function generatePDF(invoice) {
     await browser.close();
     return pdf;
 }
+
 
 
 app.listen(PORT, () => {
