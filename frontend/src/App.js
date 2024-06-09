@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import AddProduct from './components/AddProduct';
@@ -11,17 +11,20 @@ function App() {
 
   const setTokenHandler = (newToken) => {
     setToken(newToken);
-    localStorage.setItem('token', newToken);
+    if (newToken) {
+      localStorage.setItem('token', newToken);
+    } else {
+      localStorage.removeItem('token');
+    }
   };
 
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login setToken={setTokenHandler} />} />
-          <Route path="/register" element={<Register setRegistered={() => { }} />} />
-          <Route path="/add-product" element={<AddProduct token={token} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/add-product" element={<AddProduct token={token} setToken={setTokenHandler} />} />
           <Route path="/generate-invoice" element={<GenerateInvoice token={token} />} />
         </Routes>
       </div>

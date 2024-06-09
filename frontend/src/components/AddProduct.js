@@ -1,13 +1,15 @@
 // src/components/AddProduct.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './AddProduct.css'; // Import the CSS file
 
-const AddProduct = ({ token }) => {
+const AddProduct = ({ token, setToken }) => {
     const [name, setName] = useState('');
     const [qty, setQty] = useState('');
     const [rate, setRate] = useState('');
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
 
     const fetchProducts = async () => {
         try {
@@ -59,9 +61,16 @@ const AddProduct = ({ token }) => {
         }
     };
 
+    const handleLogout = () => {
+        setToken(null);
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
+
     return (
         <div className="add-product-container">
             <h1>Add Products</h1>
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
             <div className="form-container">
                 <form onSubmit={handleSubmit}>
                     <input
