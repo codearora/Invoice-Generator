@@ -1,6 +1,7 @@
 // src/components/AddProduct.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './AddProduct.css'; // Import the CSS file
 
 const AddProduct = ({ token }) => {
     const [name, setName] = useState('');
@@ -59,42 +60,58 @@ const AddProduct = ({ token }) => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Product Name"
-                    required
-                />
-                <input
-                    type="number"
-                    value={qty}
-                    onChange={(e) => setQty(e.target.value)}
-                    placeholder="Quantity"
-                    required
-                />
-                <input
-                    type="number"
-                    value={rate}
-                    onChange={(e) => setRate(e.target.value)}
-                    placeholder="Rate"
-                    required
-                />
-                <button type="submit">Add Product</button>
-            </form>
+        <div className="add-product-container">
+            <h1>Add Products</h1>
+            <div className="form-container">
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Product Name"
+                        required
+                    />
+                    <input
+                        type="number"
+                        value={qty}
+                        onChange={(e) => setQty(e.target.value)}
+                        placeholder="Quantity"
+                        required
+                    />
+                    <input
+                        type="number"
+                        value={rate}
+                        onChange={(e) => setRate(e.target.value)}
+                        placeholder="Rate"
+                        required
+                    />
+                    <button type="submit">Add Product</button>
+                </form>
+            </div>
 
             <h2>Products</h2>
-            <ul>
-                {products.map((product, index) => (
-                    <li key={index}>
-                        {product.name} - {product.qty} units @ ${product.rate}/unit
-                    </li>
-                ))}
-            </ul>
+            <table className="product-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {products.map((product, index) => (
+                        <tr key={index}>
+                            <td>{product.name}</td>
+                            <td>{product.qty}</td>
+                            <td>{product.rate}</td>
+                            <td>{product.qty * product.rate}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
-            <button onClick={handleGenerateInvoice}>Generate Invoice</button>
+            <button className="generate-invoice-button" onClick={handleGenerateInvoice}>Generate Invoice</button>
         </div>
     );
 };

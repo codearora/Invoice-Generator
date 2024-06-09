@@ -151,12 +151,16 @@ async function generatePDF(invoice) {
             .invoice-total {
                 text-align: right;
                 font-weight: bold;
+                margin-top: 20px;
             }
             .invoice-footer {
                 margin-top: 50px;
             }
             .signature {
                 float: right;
+            }
+            .invoice-subtotal, .invoice-gst, .invoice-grand-total {
+                margin-right: 10px;
             }
         </style>
     </head>
@@ -187,13 +191,12 @@ async function generatePDF(invoice) {
             </tbody>
         </table>
         <div class="invoice-total">
-            <div>Subtotal: $${subtotal}</div>
-            <div>GST (18%): $${gst.toFixed(2)}</div>
-            <div>Total (including GST): $${(subtotal + gst).toFixed(2)}</div>
+            <div class="invoice-subtotal">Subtotal: $${subtotal}</div>
+            <div class="invoice-gst">GST (18%): $${gst.toFixed(2)}</div>
+            <div class="invoice-grand-total">Total (including GST): $${(subtotal + gst).toFixed(2)}</div>
         </div>
         <div class="invoice-footer">
             <p>Soft Industries</p>
-            <img src="signature.png" alt="Signature" class="signature">
         </div>
     </body>
     </html>
@@ -203,6 +206,7 @@ async function generatePDF(invoice) {
     await browser.close();
     return pdf;
 }
+
 
 
 
