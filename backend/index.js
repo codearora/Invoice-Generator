@@ -1,9 +1,11 @@
+// src/server.js (or your main server file)
 const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 
@@ -92,48 +94,6 @@ app.get('/products', authenticateToken, (req, res) => {
     });
 });
 
-// app.post('/generate-invoice', authenticateToken, (req, res) => {
-//     const { products } = req.body;
-//     console.log('Received products for invoice:', products); // Debugging
-//     const userId = req.user;
-//     const date = new Date().toISOString();
-//     db.run("INSERT INTO invoices (user_id, date, products) VALUES (?, ?, ?)", [userId, date, JSON.stringify(products)], async function (err) {
-//         if (err) {
-//             return res.status(400).json({ message: 'Error generating invoice' });
-//         }
-//         const invoiceId = this.lastID;
-//         const pdf = await generatePDF({ id: invoiceId, user_id: userId, date, products });
-//         res.setHeader('Content-disposition', 'attachment; filename=invoice.pdf');
-//         res.setHeader('Content-type', 'application/pdf');
-//         res.send(pdf);
-//     });
-// });
-
-// Add this route in your server.js (or index.js)
-app.delete('/delete-product/:id', authenticateToken, (req, res) => {
-    const { id } = req.params;
-    db.run("DELETE FROM products WHERE id = ?", [id], function (err) {
-        if (err) {
-            return res.status(400).json({ message: 'Error deleting product' });
-        }
-        res.json({ message: 'Product deleted successfully' });
-    });
-});
-
-// Add this route in your server.js (or index.js)
-app.put('/update-product/:id', authenticateToken, (req, res) => {
-    const { id } = req.params;
-    const { name, qty, rate } = req.body;
-    db.run("UPDATE products SET name = ?, qty = ?, rate = ? WHERE id = ?", [name, qty, rate, id], function (err) {
-        if (err) {
-            return res.status(400).json({ message: 'Error updating product' });
-        }
-        res.json({ message: 'Product updated successfully' });
-    });
-});
-
-
-// src/server.js (or your main server file)
 app.post('/generate-invoice', authenticateToken, (req, res) => {
     const { products } = req.body;
     console.log('Received products for invoice:', products); // Add this line for debugging
@@ -167,80 +127,63 @@ async function generatePDF(invoice) {
     <html>
     <head>
         <style>
-            body { font-family: Arial, sans-serif; }
-            .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
-            .invoice-box table { width: 100%; line-height: inherit; text-align: left; }
-            .invoice-box table td { padding: 5px; vertical-align: top; }
-            .invoice-box table tr td:nth-child(2) { text-align: right; }
-            .invoice-box table tr.top table td { padding-bottom: 20px; }
-            .invoice-box table tr.information table td { padding-bottom: 40px; }
-            .invoice-box table tr.heading td { background: #eee; border-bottom: 1px solid #ddd; font-weight: bold; }
-            .invoice-box table tr.details td { padding-bottom: 20px; }
-            .invoice-box table tr.item td { border-bottom: 1px solid #eee; }
-            .invoice-box table tr.item.last td { border-bottom: none; }
-            .invoice-box table tr.total td:nth-child(2) { border-top: 2px solid #eee; font-weight: bold; }
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); background-color: #f9f9f9; }
+            .invoice-box h2 { margin-top: 0; }
+            .invoice-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+            .invoice-header div { font-size: 14px; }
+            .invoice-header .title { font-size: 18px; font-weight: bold; }
+            .invoice-table { width: 100%; line-height: inherit; text-align: left; border-collapse: collapse; }
+            .invoice-table th, .invoice-table td { padding: 12px; border: 1px solid #ddd; }
+            .invoice-table th { background-color: #f2f2f2; font-weight: bold; }
+            .invoice-footer { margin-top: 20px; }
+            .invoice-footer .totals { text-align: right; }
+            .invoice-footer .totals div { margin-bottom: 10px; }
+            .signature { margin-top: 40px; text-align: right; font-weight: bold; }
         </style>
     </head>
     <body>
         <div class="invoice-box">
-            <table>
-                <tr class="top">
-                    <td colspan="2">
-                        <table>
-                            <tr>
-                                <td class="title">
-                                    <h2>Soft Factory</h2>
-                                </td>
-                                <td>
-                                    Invoice #: ${invoice.id}<br>
-                                    Date: ${new Date(invoice.date).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}<br>
-                                    Owner: ${invoice.user.name}<br>
-                                    Email: ${invoice.user.email}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <tr class="heading">
-                    <td>Product</td>
-                    <td>Price</td>
-                </tr>
-
-                ${invoice.products.map(product => `
-                    <tr class="item">
-                        <td>${product.name} (x${product.qty})</td>
-                        <td>$${product.rate}</td>
+            <div class="invoice-header">
+                <div class="title">Soft Factory</div>
+                <div>
+                    <div>Invoice #: ${invoice.id}</div>
+                    <div>Date: ${new Date(invoice.date).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</div>
+                    <div>Owner: ${invoice.user.name}</div>
+                    <div>Email: ${invoice.user.email}</div>
+                </div>
+            </div>
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Total</th>
                     </tr>
-                `).join('')}
-
-                <tr class="total">
-                    <td></td>
-                    <td>
-                        Subtotal: $${invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0).toFixed(2)}
-                    </td>
-                </tr>
-                <tr class="total">
-                    <td></td>
-                    <td>
-                        GST (18%): $${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 0.18).toFixed(2)}
-                    </td>
-                </tr>
-                <tr class="total">
-                    <td></td>
-                    <td>
-                        Total: $${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 1.18).toFixed(2)}
-                    </td>
-                </tr>
-                <tr class="total">
-                    <td></td>
-                    <td>
-                        <br><br><br><br>
-                        Signature:<br>
-                        Soft Industries
-                    </td>
-                </tr>
+                </thead>
+                <tbody>
+                    ${invoice.products.map(product => `
+                        <tr>
+                            <td>${product.name}</td>
+                            <td>${product.qty}</td>
+                            <td>$${product.rate.toFixed(2)}</td>
+                            <td>$${(product.qty * product.rate).toFixed(2)}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
             </table>
+            <div class="invoice-footer">
+                <div class="totals">
+                    <div>Subtotal: $${invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0).toFixed(2)}</div>
+                    <div>GST (18%): $${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 0.18).toFixed(2)}</div>
+                    <div><strong>Total: $${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 1.18).toFixed(2)}</strong></div>
+                </div>
+                <div class="signature">
+                    Signature<br>
+                    Soft Industries
+                </div>
+            </div>
         </div>
     </body>
     </html>
@@ -250,9 +193,6 @@ async function generatePDF(invoice) {
     await browser.close();
     return pdf;
 }
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
