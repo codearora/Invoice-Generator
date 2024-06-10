@@ -109,6 +109,30 @@ app.post('/generate-invoice', authenticateToken, (req, res) => {
     });
 });
 
+// Add this route in your server.js (or index.js)
+app.delete('/delete-product/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    db.run("DELETE FROM products WHERE id = ?", [id], function (err) {
+        if (err) {
+            return res.status(400).json({ message: 'Error deleting product' });
+        }
+        res.json({ message: 'Product deleted successfully' });
+    });
+});
+
+// Add this route in your server.js (or index.js)
+app.put('/update-product/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    const { name, qty, rate } = req.body;
+    db.run("UPDATE products SET name = ?, qty = ?, rate = ? WHERE id = ?", [name, qty, rate, id], function (err) {
+        if (err) {
+            return res.status(400).json({ message: 'Error updating product' });
+        }
+        res.json({ message: 'Product updated successfully' });
+    });
+});
+
+
 async function generatePDF(invoice) {
     console.log('Generating PDF with invoice data:', invoice); // Debugging
     const browser = await puppeteer.launch();

@@ -9,6 +9,7 @@ const AddProduct = ({ token, setToken }) => {
     const [qty, setQty] = useState('');
     const [rate, setRate] = useState('');
     const [products, setProducts] = useState([]);
+    const [editingProductId, setEditingProductId] = useState(null);
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
@@ -32,12 +33,37 @@ const AddProduct = ({ token, setToken }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/add-product', { name, qty, rate }, {
-                headers: { 'x-auth-token': token },
-            });
+            if (editingProductId) {
+                await axios.put(`http://localhost:5000/update-product/${editingProductId}`, { name, qty, rate }, {
+                    headers: { 'x-auth-token': token },
+                });
+                setEditingProductId(null);
+            } else {
+                await axios.post('http://localhost:5000/add-product', { name, qty, rate }, {
+                    headers: { 'x-auth-token': token },
+                });
+            }
             setName('');
             setQty('');
             setRate('');
+            fetchProducts(); // Refresh the product list
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleEdit = (product) => {
+        setName(product.name);
+        setQty(product.qty);
+        setRate(product.rate);
+        setEditingProductId(product.id);
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:5000/delete-product/${id}`, {
+                headers: { 'x-auth-token': token },
+            });
             fetchProducts(); // Refresh the product list
         } catch (err) {
             console.error(err);
@@ -94,7 +120,7 @@ const AddProduct = ({ token, setToken }) => {
                         placeholder="Rate"
                         required
                     />
-                    <button type="submit">Add Product</button>
+                    <button type="submit">{editingProductId ? 'Update Product' : 'Add Product'}</button>
                 </form>
             </div>
 
@@ -106,6 +132,7 @@ const AddProduct = ({ token, setToken }) => {
                         <th>Quantity</th>
                         <th>Rate</th>
                         <th>Total</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,6 +142,10 @@ const AddProduct = ({ token, setToken }) => {
                             <td>{product.qty}</td>
                             <td>{product.rate}</td>
                             <td>{product.qty * product.rate}</td>
+                            <td className="actions">
+                                <button className="edit" onClick={() => handleEdit(product)}>Edit</button>
+                                <button onClick={() => handleDelete(product.id)}>Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
