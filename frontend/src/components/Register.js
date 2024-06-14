@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import './Register.css'; // Import the CSS file
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -36,9 +37,9 @@ function Register() {
     };
 
     return (
-        <div>
+        <div className="register-container">
             <h2>Register</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -46,6 +47,7 @@ function Register() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    required
                 />
                 <input
                     type="email"
@@ -53,6 +55,7 @@ function Register() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    required
                 />
                 <input
                     type="password"
@@ -60,6 +63,7 @@ function Register() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    required
                 />
                 <button type="submit">Register</button>
             </form>
