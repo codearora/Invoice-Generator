@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Import the CSS file
+import './Login.css'; // Import CSS file for styling
 
 const Login = ({ setToken }) => {
     const [email, setEmail] = useState('');
@@ -18,6 +18,10 @@ const Login = ({ setToken }) => {
         } catch (err) {
             console.error(err);
         }
+    };
+
+    const handleRegister = () => {
+        navigate('/register');
     };
 
     return (
@@ -40,6 +44,7 @@ const Login = ({ setToken }) => {
                 />
                 <button type="submit">Login</button>
             </form>
+            <button onClick={handleRegister}>Register</button>
         </div>
     );
 };
