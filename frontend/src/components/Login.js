@@ -44,7 +44,7 @@ const Login = ({ setToken }) => {
                 />
                 <button type="submit">Login</button>
             </form>
-            <button onClick={handleRegister}>Register</button>
+            <button className="register-button" onClick={handleRegister}>Register</button>
         </div>
     );
 };
