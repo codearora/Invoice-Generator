@@ -93,6 +93,14 @@ const AddProduct = ({ token, setToken }) => {
         navigate('/login');
     };
 
+    const handleReset = () => {
+        setName('');
+        setQty('');
+        setRate('');
+        setProducts([]);
+        setEditingProductId(null);
+    };
+
     return (
         <div className="add-product-container">
             <h1>Add Products</h1>
@@ -152,6 +160,7 @@ const AddProduct = ({ token, setToken }) => {
             </table>
 
             <button className="generate-invoice-button" onClick={handleGenerateInvoice}>Generate Invoice</button>
+            <button className="reset-button" onClick={handleReset}>Reset</button>
         </div>
     );
 };

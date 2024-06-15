@@ -1,67 +1,89 @@
-/* AddProduct.css */
+/* src/components/AddProduct.css */
 
 .add-product-container {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 800px;
+    margin: auto;
     padding: 20px;
     background-color: #f9f9f9;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     text-align: center;
-    position: relative;
 }
 
-.add-product-container h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
+h1 {
     color: #333;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
 }
 
-.logout-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #ff4b5c;
-    color: white;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    padding: 12px 20px;
     border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.logout-button:hover {
-    background-color: #ff1e2d;
-}
-
-.form-container {
+button.logout-button {
+    background-color: #dc3545;
+    color: white;
     margin-bottom: 20px;
 }
 
-.form-container input[type="text"],
-.form-container input[type="number"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+button.logout-button:hover {
+    background-color: #c82333;
 }
 
-.form-container button[type="submit"],
-.form-container button[type="button"] {
-    width: calc(100% - 20px);
-    background-color: #4caf50;
+button[type="submit"] {
+    background-color: #28a745;
     color: white;
-    padding: 14px 20px;
-    margin: 8px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.form-container button[type="submit"]:hover,
-.form-container button[type="button"]:hover {
-    background-color: #45a049;
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+button.generate-invoice-button {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+button.generate-invoice-button:hover {
+    background-color: #0056b3;
+}
+
+button.reset-button {
+    background-color: #ffc107;
+    color: black;
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+}
+
+button.reset-button:hover {
+    background-color: #e0a800;
 }
 
 .product-table {
@@ -72,8 +94,8 @@
 
 .product-table th,
 .product-table td {
-    border: 1px solid #dddddd;
-    padding: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
     text-align: left;
 }
 
@@ -81,38 +103,24 @@
     background-color: #f2f2f2;
 }
 
-.product-table .actions {
-    text-align: right;
+.actions button {
+    margin-right: 10px;
 }
 
-.product-table button {
-    background-color: #f44336;
+.actions .edit {
+    background-color: #17a2b8;
     color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-left: 5px;
 }
 
-.product-table button.edit {
-    background-color: #4caf50;
+.actions .edit:hover {
+    background-color: #138496;
 }
 
-.product-table button:hover {
-    opacity: 0.8;
-}
-
-.generate-invoice-button {
-    background-color: #008cba;
+.actions .delete {
+    background-color: #dc3545;
     color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    margin-top: 20px;
-    cursor: pointer;
 }
 
-.generate-invoice-button:hover {
-    background-color: #005f6b;
+.actions .delete:hover {
+    background-color: #c82333;
 }
