@@ -36,10 +36,14 @@ function Register() {
         }
     };
 
+    const handleBackToLogin = () => {
+        navigate('/login'); // Navigate to login page
+    };
+
     return (
         <div className="register-container">
             <h2>Register</h2>
-            {error && <p>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -67,6 +71,7 @@ function Register() {
                 />
                 <button type="submit">Register</button>
             </form>
+            <button className="back-button" onClick={handleBackToLogin}>Back to Login</button>
         </div>
     );
 }
