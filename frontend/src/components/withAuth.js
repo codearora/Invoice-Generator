@@ -1,19 +1,14 @@
 // src/components/withAuth.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-const withAuth = (WrappedComponent) => {
+const withAuth = (Component) => {
     return (props) => {
-        const navigate = useNavigate();
         const token = localStorage.getItem('token');
-
-        React.useEffect(() => {
-            if (!token) {
-                navigate('/login');
-            }
-        }, [navigate, token]);
-
-        return token ? <WrappedComponent {...props} /> : null;
+        if (!token) {
+            return <Navigate to="/login" />;
+        }
+        return <Component {...props} />;
     };
 };
 

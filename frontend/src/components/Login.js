@@ -13,7 +13,7 @@ const Login = ({ setToken }) => {
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:5000/login', { email, password });
-            setToken(res.data.token);
+            setToken(res.data.token, res.data.user);
             navigate('/add-product');  // Navigate to the Add Product page on successful login
         } catch (err) {
             console.error(err);

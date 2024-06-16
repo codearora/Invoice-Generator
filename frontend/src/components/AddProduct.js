@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './AddProduct.css'; // Import the CSS file
 
-const AddProduct = ({ token, setToken }) => {
+const AddProduct = ({ token, setToken, user }) => {
     const [name, setName] = useState('');
     const [qty, setQty] = useState('');
     const [rate, setRate] = useState('');
@@ -90,6 +90,7 @@ const AddProduct = ({ token, setToken }) => {
     const handleLogout = () => {
         setToken(null);
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         navigate('/login');
     };
 
@@ -103,6 +104,10 @@ const AddProduct = ({ token, setToken }) => {
 
     return (
         <div className="add-product-container">
+            <div className="user-info">
+                <p>Welcome, {user.name}</p>
+                <p>Email: {user.email}</p>
+            </div>
             <h1>Add Products</h1>
             <button className="logout-button" onClick={handleLogout}>Logout</button>
             <div className="form-container">
