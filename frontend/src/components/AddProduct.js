@@ -142,6 +142,7 @@ const AddProduct = ({ token, setToken }) => {
                         onChange={(e) => setQty(e.target.value)}
                         placeholder="Quantity"
                         required
+                        min="0" // Ensure minimum value is 0
                     />
                     <input
                         type="number"
@@ -149,6 +150,7 @@ const AddProduct = ({ token, setToken }) => {
                         onChange={(e) => setRate(e.target.value)}
                         placeholder="Rate"
                         required
+                        min="0" // Ensure minimum value is 0
                     />
                     <button type="submit">{editingProductId ? 'Update Product' : 'Add Product'}</button>
                 </form>
