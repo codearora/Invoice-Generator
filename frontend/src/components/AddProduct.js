@@ -4,12 +4,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './AddProduct.css'; // Import the CSS file
 
-const AddProduct = ({ token, setToken, user }) => {
+const AddProduct = ({ token, setToken }) => {
     const [name, setName] = useState('');
     const [qty, setQty] = useState('');
     const [rate, setRate] = useState('');
     const [products, setProducts] = useState([]);
     const [editingProductId, setEditingProductId] = useState(null);
+    const [userEmail, setUserEmail] = useState('');
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
@@ -24,9 +25,22 @@ const AddProduct = ({ token, setToken, user }) => {
         }
     };
 
+    const fetchUserDetails = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/user-details', {
+                headers: { 'x-auth-token': token },
+            });
+            console.log('Fetched user details:', res.data); // Debugging
+            setUserEmail(res.data.email);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         if (token) {
             fetchProducts();
+            fetchUserDetails();
         }
     }, [token]);
 
@@ -90,25 +104,28 @@ const AddProduct = ({ token, setToken, user }) => {
     const handleLogout = () => {
         setToken(null);
         localStorage.removeItem('token');
-        localStorage.removeItem('user');
         navigate('/login');
     };
 
-    const handleReset = () => {
-        setName('');
-        setQty('');
-        setRate('');
-        setProducts([]);
-        setEditingProductId(null);
+    const handleReset = async () => {
+        try {
+            await axios.post('http://localhost:5000/reset-products', {}, {
+                headers: { 'x-auth-token': token },
+            });
+            setName('');
+            setQty('');
+            setRate('');
+            setProducts([]);
+            setEditingProductId(null);
+        } catch (err) {
+            console.error('Failed to reset products:', err);
+        }
     };
 
     return (
         <div className="add-product-container">
-            <div className="user-info">
-                <p>Welcome, {user.name}</p>
-                <p>Email: {user.email}</p>
-            </div>
             <h1>Add Products</h1>
+            <div className="user-info">Logged in as: {userEmail}</div>
             <button className="logout-button" onClick={handleLogout}>Logout</button>
             <div className="form-container">
                 <form onSubmit={handleSubmit}>

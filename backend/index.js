@@ -111,6 +111,16 @@ app.get('/products', authenticateToken, (req, res) => {
     });
 });
 
+app.post('/reset-products', authenticateToken, (req, res) => {
+    db.run("DELETE FROM products", function (err) {
+        if (err) {
+            return res.status(500).json({ message: 'Error resetting products' });
+        }
+        res.json({ message: 'All products deleted successfully' });
+    });
+});
+
+
 app.post('/generate-invoice', authenticateToken, (req, res) => {
     const { products } = req.body;
     console.log('Received products for invoice:', products); // Add this line for debugging
