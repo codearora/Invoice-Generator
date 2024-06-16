@@ -221,6 +221,18 @@ async function generatePDF(invoice) {
     return pdf;
 }
 
+// Add this endpoint to fetch user details
+app.get('/user-details', authenticateToken, (req, res) => {
+    const userId = req.user;
+    db.get("SELECT email FROM users WHERE id = ?", [userId], (err, user) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json(user);
+    });
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

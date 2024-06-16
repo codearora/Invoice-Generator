@@ -9,26 +9,28 @@ import withAuth from './components/withAuth';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
 
-  const setTokenHandler = (newToken, user) => {
-    setToken(newToken);
-    setUser(user);
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('user', JSON.stringify(user));
+  const setTokenHandler = (newToken) => {
+    if (newToken) {
+      setToken(newToken);
+      localStorage.setItem('token', newToken);
+    } else {
+      setToken(null);
+      localStorage.removeItem('token');
+    }
   };
 
-  const AuthenticatedAddProduct = withAuth(() => <AddProduct token={token} setToken={setTokenHandler} user={user} />);
-  const AuthenticatedGenerateInvoice = withAuth(() => <GenerateInvoice token={token} />);
+  const AuthenticatedAddProduct = withAuth(AddProduct);
+  const AuthenticatedGenerateInvoice = withAuth(GenerateInvoice);
 
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login setToken={setTokenHandler} />} />
-          <Route path="/register" element={<Register setRegistered={() => { }} />} />
-          <Route path="/add-product" element={<AuthenticatedAddProduct />} />
-          <Route path="/generate-invoice" element={<AuthenticatedGenerateInvoice />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/add-product" element={<AuthenticatedAddProduct setToken={setTokenHandler} />} />
+          <Route path="/generate-invoice" element={<AuthenticatedGenerateInvoice setToken={setTokenHandler} />} />
         </Routes>
       </div>
     </Router>

@@ -1,14 +1,24 @@
 // src/components/withAuth.js
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const withAuth = (Component) => {
+const withAuth = (WrappedComponent) => {
     return (props) => {
+        const navigate = useNavigate();
+
+        useEffect(() => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                navigate('/login');
+            }
+        }, [navigate]);
+
         const token = localStorage.getItem('token');
         if (!token) {
-            return <Navigate to="/login" />;
+            return null; // Or a loading spinner, or a message saying "Redirecting to login..."
         }
-        return <Component {...props} />;
+
+        return <WrappedComponent {...props} token={token} />;
     };
 };
 
