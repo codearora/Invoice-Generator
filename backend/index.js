@@ -113,9 +113,11 @@ app.get('/products', authenticateToken, (req, res) => {
 
 app.post('/generate-invoice', authenticateToken, (req, res) => {
     const { products } = req.body;
+    console.log('Received products for invoice:', products); // Add this line for debugging
     const userId = req.user;
     const date = new Date().toISOString();
 
+    // Fetch the user details
     db.get("SELECT name, email FROM users WHERE id = ?", [userId], (err, user) => {
         if (err || !user) {
             return res.status(500).json({ message: 'Error fetching user details' });
@@ -135,6 +137,7 @@ app.post('/generate-invoice', authenticateToken, (req, res) => {
 });
 
 async function generatePDF(invoice) {
+    console.log('Generating PDF with invoice data:', invoice); // Add this line for debugging
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const content = `
@@ -181,17 +184,17 @@ async function generatePDF(invoice) {
                         <tr>
                             <td>${product.name}</td>
                             <td>${product.qty}</td>
-                            <td>$${product.rate.toFixed(2)}</td>
-                            <td>$${(product.qty * product.rate).toFixed(2)}</td>
+                            <td>Rs ${product.rate.toFixed(2)}</td>
+                            <td>Rs ${(product.qty * product.rate).toFixed(2)}</td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
             <div class="invoice-footer">
                 <div class="totals">
-                    <div>Subtotal: $${invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0).toFixed(2)}</div>
-                    <div>GST (18%): $${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 0.18).toFixed(2)}</div>
-                    <div><strong>Total: $${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 1.18).toFixed(2)}</strong></div>
+                    <div>Subtotal: Rs ${invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0).toFixed(2)}</div>
+                    <div>GST (18%): Rs ${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 0.18).toFixed(2)}</div>
+                    <div><strong>Total: Rs ${(invoice.products.reduce((sum, product) => sum + (product.qty * product.rate), 0) * 1.18).toFixed(2)}</strong></div>
                 </div>
                 <div class="signature">
                     Signature<br>
